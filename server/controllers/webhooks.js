@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import Transcation from "../models/transaction.js";
+import Transaction from "../models/transaction.js";
 import  User from '../models/user.js';
 
 export const stripewebhooks = async(req,res)=>{
@@ -21,7 +21,7 @@ export const stripewebhooks = async(req,res)=>{
                 const session = sessionLIst.data[0]
                 const {transcationId, appId} = session.metadata;
                 if(appId === 'QuickGPT'){
-                    const transaction = await Transcation.findOne({_id: transcationId, isPaid: false})
+                    const transaction = await Transaction.findOne({_id: transcationId, isPaid: false})
                     //Update credits in user account
                     await User.updateOne({_id: transaction.userId}, {$inc: {credits: transaction.credits}})
                     //Update credit Payment status
